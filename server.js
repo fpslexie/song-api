@@ -1,17 +1,22 @@
 const express = require("express");
-const app = express();
 const cors = require("cors");
-app.use(cors());
 
+const app = express();
+
+app.use(cors());
 app.use(express.json());
 
-let currentSong = "Ничего не играет";
+let currentSong = "Nothing playing";
 
 app.post("/update", (req, res) => {
+
     const { artist, track } = req.body;
 
-    if (artist && track) {
-        currentSong = `${artist} - ${track}`;
+    if (track) {
+        currentSong = artist
+            ? `${artist} - ${track}`
+            : track;
+
         console.log("Updated:", currentSong);
     }
 
@@ -20,6 +25,10 @@ app.post("/update", (req, res) => {
 
 app.get("/song", (req, res) => {
     res.send(currentSong);
+});
+
+app.get("/", (req, res) => {
+    res.send("Song API running");
 });
 
 const PORT = process.env.PORT || 3000;
